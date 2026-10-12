@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: comparador-postgres
+    environment:
+      POSTGRES_DB: comparador
+      POSTGRES_USER: comparador
+      POSTGRES_PASSWORD: comparador
+    ports:
+      - "5432:5432"
+    volumes:
+      - comparador-dados:/var/lib/postgresql/data
+
+volumes:
+  comparador-dados:

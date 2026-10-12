@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: comparador-documentos
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/comparador}
+    username: ${DB_USER:comparador}
+    password: ${DB_PASSWORD:comparador}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 120MB
+
+server:
+  port: 8080
+
+app:
+  cors-origins:
+    - http://localhost:4200
+  embeddings:
+    enabled: true
+    model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  similarity:
+    tfidf-paragraph-threshold: 0.30
+    embeddings-paragraph-threshold: 0.60
+
+---
+# Perfil "h2": roda sem PostgreSQL (banco em memória). Uso: --spring.profiles.active=h2
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:comparador;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
