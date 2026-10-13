@@ -46,8 +46,9 @@ public class EmbeddingService implements DisposableBean {
                 List<String> lote = textos.subList(i, Math.min(i + TAMANHO_LOTE, textos.size()));
                 vetores.addAll(preditor.batchPredict(lote));
             }
-        } catch (Exception e) {
-            throw new EmbeddingIndisponivelException("Falha ao gerar embeddings: " + e.getMessage(), e);
+        } catch (Exception | LinkageError e) {
+            log.error("Falha ao gerar embeddings", e);
+            throw new EmbeddingIndisponivelException("Falha ao gerar embeddings: " + descrever(e), e);
         }
         return vetores;
     }
@@ -62,20 +63,35 @@ public class EmbeddingService implements DisposableBean {
         log.info("Carregando modelo de embeddings {} (o download ocorre na primeira execução)...", nomeModelo());
         try {
             Criteria<String, float[]> criteria = Criteria.builder()
-                .setTypes(String.class, float[].class)
-                .optModelUrls("djl://ai.djl.huggingface.pytorch/" + nomeModelo())
-                .optEngine("PyTorch")
-                .optTranslatorFactory(new TextEmbeddingTranslatorFactory())
-                .optProgress(new ProgressBar())
-                .build();
+                    .setTypes(String.class, float[].class)
+                    .optModelUrls("djl://ai.djl.huggingface.pytorch/" + nomeModelo())
+                    .optEngine("PyTorch")
+                    .optTranslatorFactory(new TextEmbeddingTranslatorFactory())
+                    .optProgress(new ProgressBar())
+                    .build();
             modelo = criteria.loadModel();
             log.info("Modelo de embeddings carregado.");
             return modelo;
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
+            log.error("Falha ao carregar o modelo de embeddings", e);
             throw new EmbeddingIndisponivelException(
-                "Não foi possível carregar o modelo de embeddings (" + nomeModelo()
-                    + "). Verifique a conexão com a internet no primeiro uso. Detalhe: " + e.getMessage(), e);
+                    "Não foi possível carregar o modelo de embeddings (" + nomeModelo()
+                            + "). Verifique a conexão com a internet no primeiro uso. Detalhe: " + descrever(e), e);
         }
+    }
+
+    /** Mensagem legível: tipo do erro + causa raiz (muitas exceções do DJL vêm com message nula). */
+    private static String descrever(Throwable erro) {
+        Throwable raiz = erro;
+        while (raiz.getCause() != null && raiz.getCause() != raiz) {
+            raiz = raiz.getCause();
+        }
+        String base = erro.getClass().getSimpleName() + (erro.getMessage() == null ? "" : ": " + erro.getMessage());
+        if (raiz != erro) {
+            base += " (causa: " + raiz.getClass().getSimpleName()
+                    + (raiz.getMessage() == null ? "" : ": " + raiz.getMessage()) + ")";
+        }
+        return base;
     }
 
     @Override

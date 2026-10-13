@@ -59,6 +59,14 @@
             <artifactId>tika-parsers-standard-package</artifactId>
             <version>${tika.version}</version>
         </dependency>
+         <!-- Conflito de versões: o DJL traz commons-compress 1.27.1, que exige commons-io 2.16+
+             (classe ChecksumInputStream), mas o Tika 2.9.2 usa commons-io 2.15.1.
+             Fixamos o commons-compress na versão com que o Tika 2.9.2 foi testado. -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.25.0</version>
+        </dependency>
 
         <!-- Embeddings em Java puro (Deep Java Library + modelo HuggingFace) -->
         <dependency>

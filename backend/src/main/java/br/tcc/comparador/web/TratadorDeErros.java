@@ -26,19 +26,24 @@ public class TratadorDeErros {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErroResponse> arquivoGrande(MaxUploadSizeExceededException e) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-            .body(new ErroResponse("Arquivo grande demais. O limite é 25 MB por arquivo."));
+                .body(new ErroResponse("Arquivo grande demais. O limite é 25 MB por arquivo."));
     }
 
     @ExceptionHandler({MissingServletRequestParameterException.class,
-        MissingServletRequestPartException.class, MethodArgumentTypeMismatchException.class})
+            MissingServletRequestPartException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErroResponse> requisicaoInvalida(Exception e) {
         return ResponseEntity.badRequest().body(new ErroResponse("Requisição inválida: envie os arquivos e um método válido."));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroResponse> inesperado(Exception e) {
+    @ExceptionHandler({Exception.class, LinkageError.class})
+    public ResponseEntity<ErroResponse> inesperado(Throwable e) {
         log.error("Erro inesperado", e);
+        Throwable raiz = e;
+        while (raiz.getCause() != null && raiz.getCause() != raiz) {
+            raiz = raiz.getCause();
+        }
+        String detalhe = raiz.getClass().getSimpleName() + (raiz.getMessage() == null ? "" : ": " + raiz.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new ErroResponse("Erro interno ao processar a comparação."));
+                .body(new ErroResponse("Erro interno ao processar a comparação. Detalhe: " + detalhe));
     }
 }

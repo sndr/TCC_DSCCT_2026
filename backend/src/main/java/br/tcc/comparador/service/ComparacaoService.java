@@ -10,11 +10,15 @@ import br.tcc.comparador.web.Dtos.HistoricoItem;
 import br.tcc.comparador.web.Dtos.ResultadoMetodo;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ComparacaoService {
+
+    private static final Logger log = LoggerFactory.getLogger(ComparacaoService.class);
 
     private static final int LIMITE_PALAVRAS_EM_COMUM = 400;
 
@@ -51,22 +55,31 @@ public class ComparacaoService {
 
         for (ResultadoMetodo resultado : resultados) {
             if (resultado.erro() == null) {
-                repositorio.save(new Comparacao(a.nome(), b.nome(), resultado.metodo(),
-                    resultado.similaridade(), resultado.palavrasSemelhantes(),
-                    resultado.paragrafosRelacionados(), resultado.tempoMs()));
+                salvarHistorico(a, b, resultado);
             }
         }
 
         return new ComparacaoResponse(a.nome(), b.nome(), a.paragrafos().size(), b.paragrafos().size(),
-            a.tokens().size(), b.tokens().size(), resultados);
+                a.tokens().size(), b.tokens().size(), resultados);
+    }
+
+    /** O histórico é um extra: se o banco falhar, o usuário ainda recebe o resultado da comparação. */
+    private void salvarHistorico(DocumentoPreparado a, DocumentoPreparado b, ResultadoMetodo resultado) {
+        try {
+            repositorio.save(new Comparacao(a.nome(), b.nome(), resultado.metodo(),
+                    resultado.similaridade(), resultado.palavrasSemelhantes(),
+                    resultado.paragrafosRelacionados(), resultado.tempoMs()));
+        } catch (RuntimeException e) {
+            log.warn("Não foi possível gravar o histórico da comparação no banco: {}", e.getMessage());
+        }
     }
 
     public List<HistoricoItem> historico() {
         return repositorio.findTop30ByOrderByCriadoEmDesc().stream()
-            .map(c -> new HistoricoItem(c.getId(), c.getArquivoA(), c.getArquivoB(), c.getMetodo(),
-                c.getSimilaridade(), c.getPalavrasSemelhantes(), c.getParagrafosRelacionados(),
-                c.getTempoMs(), c.getCriadoEm()))
-            .toList();
+                .map(c -> new HistoricoItem(c.getId(), c.getArquivoA(), c.getArquivoB(), c.getMetodo(),
+                        c.getSimilaridade(), c.getPalavrasSemelhantes(), c.getParagrafosRelacionados(),
+                        c.getTempoMs(), c.getCriadoEm()))
+                .toList();
     }
 
     private ResultadoMetodo compararEmbeddings(DocumentoPreparado a, DocumentoPreparado b, Overlap overlap) {

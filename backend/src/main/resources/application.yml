@@ -1,10 +1,12 @@
 spring:
   application:
     name: comparador-documentos
+  # Padrão: H2 em arquivo (./data/comparador), não precisa instalar nada e o histórico persiste.
+  # Para usar PostgreSQL, ative o perfil "postgres" (veja o final deste arquivo).
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/comparador}
-    username: ${DB_USER:comparador}
-    password: ${DB_PASSWORD:comparador}
+    url: jdbc:h2:file:./data/comparador;MODE=PostgreSQL
+    username: sa
+    password: ""
   jpa:
     open-in-view: false
     hibernate:
@@ -28,12 +30,13 @@ app:
     embeddings-paragraph-threshold: 0.60
 
 ---
-# Perfil "h2": roda sem PostgreSQL (banco em memória). Uso: --spring.profiles.active=h2
+# Perfil "postgres": usa o PostgreSQL do docker-compose.yml.
+# Uso: --spring.profiles.active=postgres  (no IntelliJ: campo "Active profiles")
 spring:
   config:
     activate:
-      on-profile: h2
+      on-profile: postgres
   datasource:
-    url: jdbc:h2:mem:comparador;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
-    username: sa
-    password: ""
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/comparador}
+    username: ${DB_USER:comparador}
+    password: ${DB_PASSWORD:comparador}

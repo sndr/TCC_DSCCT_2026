@@ -37,7 +37,14 @@ export function mensagemDeErro(e: unknown): string {
       return 'Não foi possível conectar ao back-end. Confirme que o Spring Boot está rodando na porta 8080.';
     }
     const detalhe = (e.error && typeof e.error === 'object' && 'erro' in e.error) ? (e.error as { erro: string }).erro : null;
-    return detalhe ?? `Erro ${e.status} ao processar a requisição.`;
+    if (detalhe) {
+      return detalhe;
+    }
+    // 5xx sem o JSON do nosso back-end: quem respondeu foi o proxy do Angular, ou seja, o Spring Boot não está no ar.
+    if (e.status >= 500) {
+      return 'O back-end não respondeu. Confirme que o Spring Boot subiu (porta 8080) e abra http://localhost:8080/api/status no navegador para testar. Se ele não subir, veja o erro no terminal.';
+    }
+    return `Erro ${e.status} ao processar a requisição.`;
   }
   return 'Erro inesperado.';
 }
