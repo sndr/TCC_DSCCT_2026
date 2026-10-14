@@ -6,6 +6,7 @@ import java.util.List;
 /** Objetos trocados com o front-end Angular. */
 public final class Dtos {
 
+    /** Padrao de todo contrutor eh deixar um uma funcao vazia para evitar problemas futuros */
     private Dtos() {
     }
 
