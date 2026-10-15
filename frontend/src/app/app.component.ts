@@ -12,6 +12,7 @@ import { CompararComponent } from './comparar.component';
       <nav aria-label="Telas">
         <button type="button" [class.ativa]="tela() === 'comparar'" (click)="tela.set('comparar')">Comparar dois documentos</button>
         <button type="button" [class.ativa]="tela() === 'algoritmos'" (click)="tela.set('algoritmos')">Comparação dos algoritmos</button>
+        // feature: botão de resultados do benchmark
       </nav>
     </header>
     <main>
