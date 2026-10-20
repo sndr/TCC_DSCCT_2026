@@ -10,6 +10,7 @@ import br.tcc.comparador.web.Dtos.HistoricoItem;
 import br.tcc.comparador.web.Dtos.ResultadoMetodo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,11 @@ public class ComparacaoService {
             }
         }
 
+        int palavrasUnicasA = Set.copyOf(a.tokens()).size();
+        int palavrasUnicasB = Set.copyOf(b.tokens()).size();
+
         return new ComparacaoResponse(a.nome(), b.nome(), a.paragrafos().size(), b.paragrafos().size(),
-                a.tokens().size(), b.tokens().size(), resultados);
+                a.tokens().size(), b.tokens().size(), palavrasUnicasA, palavrasUnicasB, resultados);
     }
 
     /** O histórico é um extra: se o banco falhar, o usuário ainda recebe o resultado da comparação. */
