@@ -16,6 +16,7 @@ interface ResultadoVM {
   classe: 'tfidf' | 'emb';
   paragrafos: ParagrafoVM[];
   palavras: string[];
+  jaccard: number | null;
 }
 
 @Component({
@@ -73,7 +74,8 @@ interface ResultadoVM {
                   <div class="barra-preenchida" [style.width.%]="(v.resultado.similaridade ?? 0) * 100"></div>
                 </div>
                 <dl class="metricas">
-                  <div><dt>Palavras semelhantes</dt><dd>{{ v.resultado.palavrasSemelhantes }}</dd></div>
+                  <div><dt>Palavras em comum</dt><dd>{{ v.resultado.palavrasSemelhantes }}</dd></div>
+                  <div><dt>Percentual de palavras em comum (Jaccard)</dt><dd class="jaccard-valor">{{ pct(v.jaccard) }}</dd></div>
                   <div><dt>Parágrafos relacionados</dt><dd>{{ v.resultado.paragrafosRelacionados }}</dd></div>
                   <div><dt>Tempo</dt><dd>{{ ms(v.resultado.tempoMs) }}</dd></div>
                 </dl>
@@ -167,10 +169,15 @@ export class CompararComponent implements OnInit {
     }
     return r.resultados.map(resultado => {
       const conjunto = new Set(resultado.palavrasEmComum.map(normalizar));
+      const intersecao = resultado.palavrasSemelhantes ?? 0;
+      const uniao = r.palavrasUnicasA + r.palavrasUnicasB - intersecao;
+      const jaccard = uniao > 0 ? intersecao / uniao : null;
+
       return {
         resultado,
         classe: resultado.metodo === 'EMBEDDINGS' ? 'emb' : 'tfidf',
         palavras: resultado.palavrasEmComum.slice(0, 30),
+        jaccard,
         paragrafos: resultado.paragrafos.map(p => ({
           trechosA: destacar(p.textoA, conjunto),
           trechosB: destacar(p.textoB, conjunto),
