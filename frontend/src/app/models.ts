@@ -24,6 +24,8 @@ export interface ComparacaoResponse {
   paragrafosB: number;
   palavrasA: number;
   palavrasB: number;
+  palavrasUnicasA: number;
+  palavrasUnicasB: number;
   resultados: ResultadoMetodo[];
 }
 
