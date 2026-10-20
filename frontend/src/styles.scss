@@ -236,6 +236,12 @@ app-comparar, app-benchmark { display: grid; gap: 32px; }
   dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 }
 
+.jaccard-valor {
+  color: var(--tinta);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
 .chips {
   list-style: none;
   margin: 0;
