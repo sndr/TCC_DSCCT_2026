@@ -35,6 +35,8 @@ public final class Dtos {
         int paragrafosB,
         int palavrasA,
         int palavrasB,
+        int palavrasUnicasA,
+        int palavrasUnicasB,
         List<ResultadoMetodo> resultados) {
     }
 
