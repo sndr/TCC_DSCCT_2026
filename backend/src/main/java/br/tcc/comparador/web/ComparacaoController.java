@@ -10,7 +10,8 @@ import br.tcc.comparador.web.Dtos.HistoricoItem;
 import br.tcc.comparador.web.Dtos.StatusResponse;
 import java.util.List;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +51,12 @@ public class ComparacaoController {
     @GetMapping("/comparacoes")
     public List<HistoricoItem> historico() {
         return comparacaoService.historico();
+    }
+
+    @DeleteMapping("/comparacoes")
+    public ResponseEntity<Void> limparHistorico() {
+        comparacaoService.limparHistorico();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/benchmark", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

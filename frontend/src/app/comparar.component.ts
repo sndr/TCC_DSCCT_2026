@@ -141,7 +141,14 @@ interface ResultadoVM {
     }
 
     <section class="historico">
-      <h2>Comparações anteriores</h2>
+      <div class="resultados-cabecalho">
+        <h2>Comparações anteriores</h2>
+        @if (historico().length > 0) {
+          <button class="botao-secundario" type="button" [disabled]="limpandoHistorico()" (click)="limparHistorico()">
+            {{ limpandoHistorico() ? 'Limpando…' : 'Limpar histórico' }}
+          </button>
+        }
+      </div>
       @if (!historico().length) {
         <p class="mudo">Nada salvo ainda. Cada comparação feita aparece aqui.</p>
       } @else {
@@ -183,6 +190,7 @@ export class CompararComponent implements OnInit {
   protected erro = signal<string | null>(null);
   protected resposta = signal<ComparacaoResponse | null>(null);
   protected historico = signal<HistoricoItem[]>([]);
+  protected limpandoHistorico = signal(false);
   protected status = signal<Status | null>(null);
 
   protected podeComparar = computed(() => !!this.arquivoA() && !!this.arquivoB() && !this.carregando());
@@ -238,6 +246,24 @@ export class CompararComponent implements OnInit {
       error: e => {
         this.erro.set(mensagemDeErro(e));
         this.carregando.set(false);
+      }
+    });
+  }
+
+  protected limparHistorico(): void {
+    if (this.limpandoHistorico() || !this.historico().length || !window.confirm('Deseja apagar todo o histórico de comparações?')) {
+      return;
+    }
+    this.limpandoHistorico.set(true);
+    this.erro.set(null);
+    this.api.limparHistorico().subscribe({
+      next: () => {
+        this.historico.set([]);
+        this.limpandoHistorico.set(false);
+      },
+      error: e => {
+        this.erro.set(mensagemDeErro(e));
+        this.limpandoHistorico.set(false);
       }
     });
   }
