@@ -79,17 +79,36 @@ interface ResultadoVM {
                   <div><dt>Parágrafos relacionados</dt><dd>{{ v.resultado.paragrafosRelacionados }}</dd></div>
                   <div><dt>Tempo</dt><dd>{{ ms(v.resultado.tempoMs) }}</dd></div>
                 </dl>
-                @if (v.palavras.length) {
-                  <ul class="chips" aria-label="Palavras em comum">
-                    @for (palavra of v.palavras; track palavra) {
-                      <li>{{ palavra }}</li>
-                    }
-                  </ul>
-                }
               }
             </article>
           }
         </div>
+
+        @for (v of visoes(); track v.resultado.metodo) {
+          @if (!v.resultado.erro) {
+            <section class="palavras-painel" [class]="'palavras-painel ' + v.classe" aria-label="Palavras em comum">
+              <div class="palavras-cabecalho">
+                <div>
+                  <h2>Palavras em comum</h2>
+                  <p class="mudo">Termos encontrados nos dois documentos com {{ nome(v.resultado.metodo) }}.</p>
+                </div>
+                <span class="palavras-contagem">{{ v.resultado.palavrasSemelhantes ?? 0 }} termos</span>
+              </div>
+              @if (v.palavras.length) {
+                <ul class="chips">
+                  @for (palavra of v.palavras; track palavra) {
+                    <li>{{ palavra }}</li>
+                  }
+                </ul>
+                @if ((v.resultado.palavrasEmComum.length) > v.palavras.length) {
+                  <p class="mudo">Exibindo os primeiros {{ v.palavras.length }} termos.</p>
+                }
+              } @else {
+                <p class="mudo">Nenhuma palavra em comum foi identificada.</p>
+              }
+            </section>
+          }
+        }
 
         @for (v of visoes(); track v.resultado.metodo) {
           @if (!v.resultado.erro) {
@@ -101,12 +120,18 @@ interface ResultadoVM {
               @for (par of v.paragrafos; track $index) {
                 <div class="par">
                   <p class="par-score">{{ pct(par.similaridade) }}</p>
-                  <p class="par-texto">
-                    @for (t of par.trechosA; track $index) {<span [class.destaque]="t.destaque">{{ t.texto }}</span>}
-                  </p>
-                  <p class="par-texto">
-                    @for (t of par.trechosB; track $index) {<span [class.destaque]="t.destaque">{{ t.texto }}</span>}
-                  </p>
+                  <div class="par-documento">
+                    <span class="par-rotulo">Documento A</span>
+                    <p class="par-texto">
+                      @for (t of par.trechosA; track $index) {<span [class.destaque]="t.destaque">{{ t.texto }}</span>}
+                    </p>
+                  </div>
+                  <div class="par-documento">
+                    <span class="par-rotulo">Documento B</span>
+                    <p class="par-texto">
+                      @for (t of par.trechosB; track $index) {<span [class.destaque]="t.destaque">{{ t.texto }}</span>}
+                    </p>
+                  </div>
                 </div>
               }
             </details>
