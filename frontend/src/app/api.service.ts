@@ -24,6 +24,10 @@ export class ApiService {
     return this.http.get<HistoricoItem[]>(`${this.base}/comparacoes`);
   }
 
+  limparHistorico(): Observable<void> {
+    return this.http.delete<void>(`${this.base}/comparacoes`);
+  }
+
   benchmark(arquivos: File[]): Observable<BenchmarkResponse> {
     const form = new FormData();
     arquivos.forEach(arquivo => form.append('arquivos', arquivo));

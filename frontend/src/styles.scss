@@ -159,6 +159,19 @@ app-comparar, app-benchmark { display: grid; gap: 32px; }
   &:disabled { background: #a8b2be; cursor: not-allowed; }
 }
 
+.botao-secundario {
+  flex: none;
+  border: 1px solid #e0b7b9;
+  border-radius: 8px;
+  padding: 9px 14px;
+  background: #fff;
+  color: var(--erro);
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: var(--erro-fundo); }
+  &:disabled { opacity: 0.6; cursor: wait; }
+}
+
 .link {
   background: none;
   border: 0;
@@ -293,7 +306,24 @@ app-comparar, app-benchmark { display: grid; gap: 32px; }
 .par-texto { margin: 0; font-family: var(--serifa); font-size: 1.02rem; line-height: 1.6; max-width: 62ch; }
 .destaque { background: var(--marca); padding: 0 2px; border-radius: 2px; }
 
-.historico h2 { font-size: 1.4rem; margin-bottom: 12px; }
+.resultados-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.resultados-cabecalho h2 { font-size: 1.4rem; margin-bottom: 4px; }
+.historico-grafico {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--linha);
+  border-radius: 10px;
+  background: var(--superficie);
+}
+.grafico-titulo { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.grafico-titulo h3 { margin: 0 0 3px; font: 500 1.1rem var(--serifa); }
+.historico-grafico-area { position: relative; min-height: 240px; max-height: 680px; }
+.legenda-metodos { list-style: none; display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; color: var(--mudo); font-size: 0.85rem; }
+.legenda-metodos li { display: inline-flex; align-items: center; gap: 7px; }
+.legenda-ponto { width: 10px; height: 10px; border-radius: 50%; }
+.legenda-ponto.tfidf { background: var(--tfidf); }
+.legenda-ponto.emb { background: var(--emb); }
 
 .tabela-rolagem {
   overflow-x: auto;
@@ -348,6 +378,8 @@ tfoot td { font-weight: 600; background: #f7f9fb; }
   .par { grid-template-columns: 1fr; gap: 8px; }
   .palavras-painel { padding: 18px; }
   .palavras-cabecalho { align-items: flex-start; }
+  .resultados-cabecalho, .grafico-titulo { align-items: flex-start; flex-direction: column; }
+  .historico-grafico { padding: 16px; }
   .numero { font-size: 3.5rem; }
   .topo h1 { font-size: 1.7rem; }
 }

@@ -86,6 +86,10 @@ public class ComparacaoService {
                 .toList();
     }
 
+    public void limparHistorico() {
+        repositorio.deleteAllInBatch();
+    }
+
     private ResultadoMetodo compararEmbeddings(DocumentoPreparado a, DocumentoPreparado b, Overlap overlap) {
         try {
             DocumentoEmbutido ea = embeddings.embutir(a);
