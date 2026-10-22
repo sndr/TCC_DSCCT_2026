@@ -3,3 +3,7 @@ dist/
 .angular/
 target/
 *.log
+.codex/
+.env
+.env.*
+!.env.example
