@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { BenchmarkComponent } from './benchmark.component';
 import { CompararComponent } from './comparar.component';
-import { ResultadosComponent } from './resultados.component'; // 1. Importe aqui
+import { ResultadosComponent } from './resultados.component'; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CompararComponent, BenchmarkComponent, ResultadosComponent], // 2. Adicione nos imports
+  imports: [CompararComponent, BenchmarkComponent, ResultadosComponent], 
   template: `
     <header class="topo">
       <h1>Comparador de documentos</h1>
