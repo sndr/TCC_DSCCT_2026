@@ -25,6 +25,25 @@ interface ResultadoVM {
   imports: [DropzoneComponent, DatePipe],
   template: `
     <section class="painel">
+      <section class="intro-comparacao" aria-labelledby="intro-comparacao-titulo">
+        <div class="intro-cabecalho">
+          <span class="intro-selo">COMPARADOR DE DOCUMENTOS</span>
+          <h2 id="intro-comparacao-titulo">Compare palavras e significados</h2>
+          <p class="intro-lead">Envie dois documentos para analisar a similaridade, encontrar termos em comum e localizar parágrafos relacionados.</p>
+        </div>
+        <div class="intro-metodos">
+          <article class="intro-metodo tfidf">
+            <h3>TF-IDF</h3>
+            <p>Pondera os termos pela frequência e pelo quanto ajudam a distinguir o conteúdo de cada documento.</p>
+          </article>
+          <article class="intro-metodo emb">
+            <h3>Embeddings</h3>
+            <p>Transforma trechos em vetores numéricos que representam contexto e significado. A proximidade entre esses vetores ajuda a encontrar conteúdos parecidos mesmo com palavras diferentes.</p>
+          </article>
+        </div>
+        <p class="intro-formatos">Aceita arquivos PDF, DOCX, TXT, ODT e RTF. Escolha um método ou compare os dois lado a lado.</p>
+      </section>
+
       <div class="duplo">
         <app-dropzone titulo="Documento A" [arquivoAtual]="arquivoA()" (escolhidos)="arquivoA.set($event[0])" />
         <app-dropzone titulo="Documento B" [arquivoAtual]="arquivoB()" (escolhidos)="arquivoB.set($event[0])" />

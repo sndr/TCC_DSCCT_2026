@@ -90,6 +90,31 @@ app-comparar, app-benchmark { display: grid; gap: 32px; }
 
 .duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
+.intro-comparacao {
+  display: grid;
+  gap: 16px;
+  padding: 22px 24px;
+  border: 1px solid #d8e1ef;
+  border-radius: 10px;
+  background: linear-gradient(125deg, #f5f8ff 0%, #fbfcfe 72%);
+}
+.intro-cabecalho { display: grid; gap: 5px; }
+.intro-selo { color: var(--tfidf); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; }
+.intro-cabecalho h2 { font-size: 1.45rem; }
+.intro-lead { max-width: 72ch; margin: 0; color: var(--mudo); }
+.intro-metodos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.intro-metodo {
+  padding: 13px 16px;
+  border: 1px solid var(--linha);
+  border-left: 3px solid var(--tfidf);
+  border-radius: 8px;
+  background: var(--superficie);
+  h3 { margin: 0 0 4px; color: var(--tfidf); font-size: 0.95rem; }
+  p { margin: 0; color: var(--mudo); font-size: 0.875rem; }
+  &.emb { border-left-color: var(--emb); h3 { color: var(--emb); } }
+}
+.intro-formatos { margin: 0; color: var(--mudo); font-size: 0.82rem; }
+
 .dropzone {
   position: relative;
   display: grid;
@@ -375,6 +400,8 @@ tfoot td { font-weight: 600; background: #f7f9fb; }
 
 @media (max-width: 760px) {
   .duplo, .cartoes.dois { grid-template-columns: 1fr; }
+  .intro-metodos { grid-template-columns: 1fr; }
+  .intro-comparacao { padding: 18px; }
   .par { grid-template-columns: 1fr; gap: 8px; }
   .palavras-painel { padding: 18px; }
   .palavras-cabecalho { align-items: flex-start; }
