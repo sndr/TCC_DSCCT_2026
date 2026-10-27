@@ -44,7 +44,7 @@ export function mensagemDeErro(e: unknown): string {
     if (detalhe) {
       return detalhe;
     }
-    // 5xx sem o JSON do nosso back-end: quem respondeu foi o proxy do Angular, ou seja, o Spring Boot não está no ar.
+
     if (e.status >= 500) {
       return 'O back-end não respondeu. Confirme que o Spring Boot subiu (porta 8080) e abra http://localhost:8080/api/status no navegador para testar. Se ele não subir, veja o erro no terminal.';
     }

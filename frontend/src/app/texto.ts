@@ -7,7 +7,6 @@ export function normalizar(palavra: string): string {
   return palavra.normalize('NFD').replace(/\p{M}+/gu, '').toLowerCase();
 }
 
-/** Quebra o texto em trechos, marcando as palavras que existem nos dois documentos. */
 export function destacar(texto: string, palavras: Set<string>): Trecho[] {
   return texto
     .split(/(\p{L}+)/u)
